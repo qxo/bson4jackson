@@ -133,7 +133,7 @@ public class BsonParserTest {
 		ArrayList<Thread> threads = new ArrayList<Thread>();
 		for (int i = 0; i < 50; i++) {
 			threads.add(new Thread(new Runnable() {
-				@Override
+				/** @Override **/
 				public void run() {
 					try {
 						Map<?, ?> data = parseBsonObject(o);

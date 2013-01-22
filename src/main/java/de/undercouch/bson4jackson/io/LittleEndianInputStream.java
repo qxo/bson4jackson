@@ -72,12 +72,12 @@ public class LittleEndianInputStream extends FilterInputStream implements DataIn
 		_staticBuffers = StaticBuffers.getInstance();
 	}
 	
-	@Override
+	/** @Override **/
 	public void readFully(byte[] b) throws IOException {
 		readFully(b, 0, b.length);
 	}
 
-	@Override
+	/** @Override **/
 	public void readFully(byte[] b, int off, int len) throws IOException {
 		while (len > 0) {
 			int r = read(b, off, len);
@@ -89,7 +89,7 @@ public class LittleEndianInputStream extends FilterInputStream implements DataIn
 		}
 	}
 
-	@Override
+	/** @Override **/
 	public int skipBytes(int n) throws IOException {
 		int r = 0;
 		while (n > 0) {
@@ -103,17 +103,17 @@ public class LittleEndianInputStream extends FilterInputStream implements DataIn
 		return r;
 	}
 
-	@Override
+	/** @Override **/
 	public boolean readBoolean() throws IOException {
 		return (readByte() != 0);
 	}
 
-	@Override
+	/** @Override **/
 	public byte readByte() throws IOException {
 		return (byte)readUnsignedByte();
 	}
 
-	@Override
+	/** @Override **/
 	public int readUnsignedByte() throws IOException {
 		int r = read();
 		if (r < 0) {
@@ -122,48 +122,48 @@ public class LittleEndianInputStream extends FilterInputStream implements DataIn
 		return r;
 	}
 
-	@Override
+	/** @Override **/
 	public short readShort() throws IOException {
 		return (short)readUnsignedShort();
 	}
 
-	@Override
+	/** @Override **/
 	public int readUnsignedShort() throws IOException {
 		int r1 = readUnsignedByte();
 		int r2 = readUnsignedByte();
 		return (r1 + (r2 << 8));
 	}
 
-	@Override
+	/** @Override **/
 	public char readChar() throws IOException {
 		return (char)readUnsignedShort();
 	}
 
-	@Override
+	/** @Override **/
 	public int readInt() throws IOException {
 		readFully(_rawBuf, 0, 4);
 		return _buf.getInt(0);
 	}
 
-	@Override
+	/** @Override **/
 	public long readLong() throws IOException {
 		readFully(_rawBuf, 0, 8);
 		return _buf.getLong(0);
 	}
 
-	@Override
+	/** @Override **/
 	public float readFloat() throws IOException {
 		readFully(_rawBuf, 0, 4);
 		return _buf.getFloat(0);
 	}
 
-	@Override
+	/** @Override **/
 	public double readDouble() throws IOException {
 		readFully(_rawBuf, 0, 8);
 		return _buf.getDouble(0);
 	}
 
-	@Override
+	/** @Override **/
 	public String readLine() throws IOException {
 		int bufSize = 0;
 		if (_lineBuffer != null) {
@@ -213,7 +213,7 @@ public class LittleEndianInputStream extends FilterInputStream implements DataIn
 	 * <p>If the output stream does no include such a short value, use
 	 * {@link #readUTF(int)} to explicitly specify the number of bytes.</p>
 	 */
-	@Override
+	/** @Override **/
 	public String readUTF() throws IOException {
 		return DataInputStream.readUTF(this);
 	}
