@@ -4,7 +4,7 @@ apply plugin: 'signing'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-version = '2.1.0'
+version = '2.2.0'
 group = 'de.undercouch'
 sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
@@ -13,13 +13,17 @@ repositories {
     mavenCentral()
 }
 
+tasks.withType(Compile) { 
+    options.compilerArgs << "-Xlint" 
+} 
+
 dependencies {
-    compile 'com.fasterxml.jackson.core:jackson-core:[2.0.0,3.0.0)'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:[2.0.0,3.0.0)'
-    compile 'com.fasterxml.jackson.core:jackson-databind:[2.0.0,3.0.0)'
-    
-    testCompile 'junit:junit:4.10'
-    testCompile 'org.mongodb:mongo-java-driver:2.9.3'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.2.1'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.2.1'
+
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.mongodb:mongo-java-driver:2.11.1'
 }
 
 jar {
@@ -87,7 +91,7 @@ uploadArchives {
                name 'bson4jackson'
                packaging 'jar'
                description 'A pluggable BSON generator and parser for Jackson JSON processor.'
-               url 'http://www.michel-kraemer.de'
+               url 'http://www.michel-kraemer.com'
  
                scm {
                    url 'scm:git:git://github.com/michel-kraemer/bson4jackson.git'

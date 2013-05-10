@@ -50,6 +50,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.undercouch.bson4jackson.types.JavaScript;
@@ -274,7 +275,7 @@ public class BsonParserTest {
 		ObjectMapper mapper = new ObjectMapper(fac);
 		fac.setCodec(mapper);
 		
-		BsonParser dec = fac.createJsonParser(bais);
+		BsonParser dec = fac.createParser(bais);
 		
 		assertEquals(JsonToken.START_OBJECT, dec.nextToken());
 		
@@ -345,13 +346,13 @@ public class BsonParserTest {
 	public void parseBeyondEnd() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		BsonFactory bsonFactory = new BsonFactory();
-		BsonGenerator generator = bsonFactory.createJsonGenerator(out);
+		BsonGenerator generator = bsonFactory.createGenerator(out);
 		generator.writeStartObject();
 		generator.writeStringField("myField", "myValue");
 		generator.writeEndObject();
 		generator.close();
 
-		BsonParser parser = (BsonParser)bsonFactory.createJsonParser(out.toByteArray());
+		BsonParser parser = bsonFactory.createJsonParser(out.toByteArray());
 		//the following loop shall throw no exception and end after 4 iterations
 		int i = 0;
 		while (parser.nextToken() != null) {
@@ -370,7 +371,7 @@ public class BsonParserTest {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		BsonFactory bsonFactory = new BsonFactory();
 		bsonFactory.enable(BsonParser.Feature.HONOR_DOCUMENT_LENGTH);
-		BsonGenerator generator = bsonFactory.createJsonGenerator(out);
+		BsonGenerator generator = bsonFactory.createGenerator(out);
 		generator.writeStartObject();
 		generator.writeStringField("myField", "myValue");
 		generator.writeEndObject();
@@ -404,7 +405,7 @@ public class BsonParserTest {
 		
 		ByteArrayInputStream bais = new ByteArrayInputStream(b);
 		BsonFactory fac = new BsonFactory();
-		BsonParser dec = fac.createJsonParser(bais);
+		BsonParser dec = fac.createParser(bais);
 		
 		assertEquals(JsonToken.START_OBJECT, dec.nextToken());
 		
@@ -421,5 +422,33 @@ public class BsonParserTest {
 		assertEquals("1234", dec.getText());
 		
 		assertEquals(JsonToken.END_OBJECT, dec.nextToken());
+	}
+	
+	/**
+	 * Tests if a simple BSON file can be read successfully
+	 */
+	@Test
+	public void readBSONFile() throws Exception {
+		InputStream is = getClass().getResourceAsStream("test.bson");
+		try {
+			ObjectMapper mapper = new ObjectMapper(new BsonFactory());
+			MappingIterator<BSONObject> iterator =
+					mapper.reader(BasicBSONObject.class).readValues(is);
+
+			BSONObject o = null;
+			while (iterator.hasNext()) {
+				assertNull(o);
+				BSONObject object = iterator.next();
+				assertNotNull(object);
+				o = object;
+			}
+			
+			assertEquals("Hello world", o.get("message"));
+			assertEquals(10.0, o.get("size"));
+			assertTrue(o.keySet().contains("_id"));
+			assertEquals(3, o.keySet().size());
+		} finally {
+			is.close();
+		}
 	}
 }
