@@ -172,7 +172,7 @@ public class BsonFactory extends JsonFactory {
 		return _createJsonParser(in, _createContext(in, false));
     }
 
-    @Override
+   // @Override
     protected BsonParser _createJsonParser(InputStream in, IOContext ctxt)
     	throws IOException, JsonParseException {
 		BsonParser p = new BsonParser(ctxt, _parserFeatures, _bsonParserFeatures, in);
@@ -183,24 +183,24 @@ public class BsonFactory extends JsonFactory {
 		return p;
      }
 
-    @Override
+    //@Override
     protected JsonParser _createJsonParser(Reader r, IOContext ctxt)
     	throws IOException, JsonParseException {
     	throw new UnsupportedOperationException("Can not create reader for non-byte-based source");
     }
     
-    @Override
+    //@Override
     protected JsonParser _createJsonParser(byte[] data, int offset, int len, IOContext ctxt)
     	throws IOException, JsonParseException {
     	return _createJsonParser(new ByteArrayInputStream(data, offset, len), ctxt);
     }
     
-    @Override
+    //@Override
     protected JsonGenerator _createUTF8JsonGenerator(OutputStream out, IOContext ctxt) throws IOException {
     	return createJsonGenerator(out, ctxt.getEncoding());
     }
     
-    @Override
+    //@Override
     protected JsonGenerator _createJsonGenerator(Writer out, IOContext ctxt)
     	throws IOException {
     	throw new UnsupportedOperationException("Can not create generator for non-byte-based target");
@@ -210,5 +210,9 @@ public class BsonFactory extends JsonFactory {
     protected Writer _createWriter(OutputStream out, JsonEncoding enc, IOContext ctxt)
     	throws IOException {
     	throw new UnsupportedOperationException("Can not create generator for non-byte-based target");
+    }
+    public String getFormatName()
+    {
+		return "BSON";
     }
 }
